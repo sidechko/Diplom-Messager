@@ -1,0 +1,19 @@
+﻿<Window x:Class="MessagerClient.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MessagerClient"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="280" Width="400" MinHeight="280" MinWidth="400" MaxHeight="280" MaxWidth="400">
+    <StackPanel Margin="20">
+        <Label>Login</Label>
+        <TextBox Name="LoginTB"/>
+        
+        <Label>Password</Label>
+        <PasswordBox Name="PasswordTB"/>
+        
+        <Button Name="LoginButton" Margin="0 10 0 0" Click="LoginButton_Click">Login</Button>
+        <Button Name="RegisterButton" Margin="0 10 0 0" Click="RegisterButton_Click">Register</Button>
+    </StackPanel>
+</Window>
