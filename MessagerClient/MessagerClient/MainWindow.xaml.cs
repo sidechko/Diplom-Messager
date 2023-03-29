@@ -48,10 +48,13 @@ namespace MessagerClient
 
         private void OnChangeChannel(int channelId, bool isMessage)
         {
-            if (isMessage && CurrentApp.IsSelectedChannel(channelId))
-                CurrentChannelMessages.Add(CurrentApp.GetLastAdded());
-            else
-                Channels.ItemsSource = CurrentApp.GetChannels();
+            CurrentDispacher.Invoke(() =>
+            {
+                if (isMessage && CurrentApp.IsSelectedChannel(channelId))
+                    CurrentChannelMessages.Add(CurrentApp.GetLastAdded());
+                else
+                    Channels.ItemsSource = CurrentApp.GetChannels();
+            });
             UpdateMessageSource();
         }
 

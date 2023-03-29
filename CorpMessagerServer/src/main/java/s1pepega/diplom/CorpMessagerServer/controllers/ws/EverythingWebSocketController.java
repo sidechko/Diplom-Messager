@@ -10,8 +10,6 @@ import s1pepega.diplom.CorpMessagerServer.services.interfaces.ChannelService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.MessageService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.UserChannelService;
 
-import java.util.List;
-
 @Controller
 public class EverythingWebSocketController {
     @Autowired

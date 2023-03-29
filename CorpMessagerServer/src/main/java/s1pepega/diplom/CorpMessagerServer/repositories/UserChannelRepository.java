@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface UserChannelRepository extends JpaRepository<UserChannelLink, Integer> {
 
-    @Query(value = "SELECT DISTINCT * FROM UserChannels uc WHERE uc.userId = :id", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM userchannels uc WHERE uc.userId = :id", nativeQuery = true)
     public List<UserChannelLink> getUserChannels(@Param("id") Integer id);
 
-    @Query(value = "SELECT DISTINCT * FROM UserChannels uc WHERE uc.availableChannel = :id", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM userchannels uc WHERE uc.availableChannel = :id", nativeQuery = true)
     public List<UserChannelLink> getChannelUsers(@Param("id") Integer id);
 }

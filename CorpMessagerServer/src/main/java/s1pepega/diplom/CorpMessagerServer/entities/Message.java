@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ import java.util.Objects;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
     @Column(name = "content", nullable = false)
     private String content;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,18 +40,18 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(Id, message.Id) && Objects.equals(content, message.content) && Objects.equals(channel, message.channel) && Objects.equals(sender, message.sender) && Objects.equals(sendTime, message.sendTime) && Objects.equals(updateTime, message.updateTime);
+        return Objects.equals(id, message.id) && Objects.equals(content, message.content) && Objects.equals(channel, message.channel) && Objects.equals(sender, message.sender) && Objects.equals(sendTime, message.sendTime) && Objects.equals(updateTime, message.updateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, content, channel, sender, sendTime, updateTime);
+        return Objects.hash(id, content, channel, sender, sendTime, updateTime);
     }
 
     @Override
     public String toString() {
         return "Message{" +
-                "Id=" + Id +
+                "Id=" + id +
                 ", content='" + content + '\'' +
                 ", channel=" + channel +
                 ", sender=" + sender +

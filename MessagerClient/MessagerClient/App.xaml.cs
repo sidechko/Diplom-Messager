@@ -142,7 +142,7 @@ namespace MessagerClient
             wsClient.Send<Message>("/channel/"+c.Id+"/send_message", new Message()
             {
                 Sender = AppUser,
-                Channel = ChannelPool.First().Value,
+                Channel = ChannelPool[SelectedChannel.Value],
                 Content = content
             });
         }

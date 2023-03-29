@@ -3,7 +3,6 @@ package s1pepega.diplom.CorpMessagerServer.services.impls;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import s1pepega.diplom.CorpMessagerServer.entities.Channel;
 import s1pepega.diplom.CorpMessagerServer.repositories.ChannelRepository;
@@ -11,7 +10,6 @@ import s1pepega.diplom.CorpMessagerServer.services.interfaces.ChannelService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 

@@ -17,7 +17,7 @@ import java.util.Objects;
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id;
+    private Integer id;
     @Column(name = "channelname", nullable = false)
     private String name;
     @Column(name = "description")
@@ -28,18 +28,18 @@ public class Channel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Channel channel = (Channel) o;
-        return Objects.equals(Id, channel.Id) && Objects.equals(name, channel.name) && Objects.equals(desc, channel.desc);
+        return Objects.equals(id, channel.id) && Objects.equals(name, channel.name) && Objects.equals(desc, channel.desc);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Id, name, desc);
+        return Objects.hash(id, name, desc);
     }
 
     @Override
     public String toString() {
         return "Channel{" +
-                "Id=" + Id +
+                "Id=" + id +
                 ", name='" + name + '\'' +
                 ", desc='" + desc + '\'' +
                 '}';

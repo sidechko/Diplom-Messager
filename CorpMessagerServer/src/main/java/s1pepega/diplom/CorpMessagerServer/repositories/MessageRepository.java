@@ -11,13 +11,13 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
 
-    @Query(value = "SELECT * FROM Messages m WHERE m.Channel = :channelId LIMIT :skip, :count", nativeQuery = true)
+    @Query(value = "SELECT * FROM messages m WHERE m.channel = :channelId LIMIT :skip, :count", nativeQuery = true)
     List<Message> getMessageInChannelWithStartAndCount(
             @Param("channelId")Integer channelId,
             @Param("skip")Integer skip,
             @Param("count")Integer count);
 
-    @Query(value = "SELECT * FROM Messages m WHERE m.Channel = :channelId", nativeQuery = true)
+    @Query(value = "SELECT * FROM messages m WHERE m.channel = :channelId", nativeQuery = true)
     List<Message> getMessageAllInChannel(
             @Param("channelId")Integer channelId);
 }
