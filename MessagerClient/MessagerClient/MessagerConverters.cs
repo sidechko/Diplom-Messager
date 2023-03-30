@@ -20,7 +20,6 @@ namespace MessagerClient
             if (value is not User)
                 return returnValue;
             return user.Equals(value as User);
-            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

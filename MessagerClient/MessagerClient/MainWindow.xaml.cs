@@ -1,4 +1,5 @@
 ﻿using MessagerClient.models;
+using MessagerClient.utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MessagerClient
 {
@@ -28,6 +30,7 @@ namespace MessagerClient
         private App CurrentApp;
         private List<Message> CurrentChannelMessages = new();
         private Dispatcher CurrentDispacher = Dispatcher.CurrentDispatcher;
+        private Message? ToEdit = null;
         public MainWindow(Window parent)
         {
             InitializeComponent();
@@ -46,12 +49,30 @@ namespace MessagerClient
             this.Parent?.Show();
         }
 
-        private void OnChangeChannel(int channelId, bool isMessage)
+        private void OnChangeChannel(int channelId, bool isMessage, int type = 0)
         {
             CurrentDispacher.Invoke(() =>
             {
                 if (isMessage && CurrentApp.IsSelectedChannel(channelId))
-                    CurrentChannelMessages.Add(CurrentApp.GetLastAdded());
+                {
+                    switch (type)
+                    {
+                        //ADD
+                        case 0:
+                            CurrentChannelMessages.Add(CurrentApp.GetLastAdded());
+                            break;
+                        //EDIT
+                        case 1:
+                            int index = CurrentChannelMessages.IndexOf(CurrentChannelMessages.Single(msg => msg.Id.Value == CurrentApp.GetLastAdded().Id.Value));
+                            CurrentChannelMessages.RemoveAt(index);
+                            CurrentChannelMessages.Insert(index, CurrentApp.GetLastAdded());
+                            break;
+                        //DELETE
+                        case 2:
+                            CurrentChannelMessages.Remove(CurrentChannelMessages.Single(msg => msg.Id.Value == CurrentApp.GetLastRemoved().Id.Value));
+                            break;
+                    }
+                }
                 else
                     Channels.ItemsSource = CurrentApp.GetChannels();
             });
@@ -94,7 +115,53 @@ namespace MessagerClient
         {
             string text = new TextRange(MessageTextBox.Document.ContentStart, MessageTextBox.Document.ContentEnd).Text;
             MessageTextBox.Document.Blocks.Clear();
-            CurrentApp.SendMessage(text);
+            if(ToEdit is null)
+                CurrentApp.SendMessage(text);
+            else
+            {
+                if (text.Length != 0)
+                    CurrentApp.EditMessage(ToEdit.Id.Value, text);
+                else
+                    CurrentApp.DeleteMessage(ToEdit);
+            }
+        }
+
+        private void TryEditMessage(object sender, RoutedEventArgs e)
+        {
+            Message? msg = ChannelMessages.SelectedItem as Message;
+            if (msg is null)
+                return;
+            try
+            {
+                CurrentApp.EditMessage(msg.Id.Value, "", true);
+                ToEdit = msg;
+
+                MessageTextBox.Document.Blocks.Clear();
+                MessageTextBox.AppendText(msg.Content);
+            }
+            catch(MessagerSoftClientException ex) {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("ERROR: "+ex.Message, ex.GetType().Name);
+            }
+        }
+
+        private void TryDeleteMessage(object sender, RoutedEventArgs e)
+        {
+            Message? msg = ChannelMessages.SelectedItem as Message;
+            if (msg is null)
+                return;
+            try { 
+                CurrentApp.DeleteMessage(msg);
+            }
+            catch(MessagerBaseException ex){
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+            }
+            catch(Exception ex) {
+                MessageBox.Show("ERROR: "+ex.Message, ex.GetType().Name);
+            }
         }
     }
 }

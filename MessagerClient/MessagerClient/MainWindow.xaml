@@ -43,7 +43,7 @@
                     <RowDefinition Height="7*"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <ListBox Background="{x:Null}" Name="ChannelMessages" VerticalAlignment="Bottom">
+                <ListBox Background="{x:Null}" BorderBrush="{x:Null}" Name="ChannelMessages" VerticalAlignment="Bottom">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Name="ChannelMessageSP" Orientation="Vertical" HorizontalAlignment="Right">
@@ -57,6 +57,12 @@
                             </DataTemplate.Triggers>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Click="TryEditMessage"/>
+                            <MenuItem Header="Delete" Click="TryDeleteMessage" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
                 </ListBox>
                 <Grid Grid.Row="1" Background="#99F5F5F5">
                     <Grid.ColumnDefinitions>

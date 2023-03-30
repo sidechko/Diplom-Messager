@@ -17,6 +17,7 @@ namespace MessagerClient.WS
         private string? url;
         private static readonly StompMessageSerializer serializer = new();
         private IWSMessageHandler? messageHandler;
+        public bool ConnectedToServer = false;
 
         public WSClient Initilize()
         {
@@ -88,6 +89,7 @@ namespace MessagerClient.WS
         {
             if (Client is null)
                 throw new MessagerHardClientException("Client is null. Unsub canceled");
+
             var unsubscribeMessage = new StompMessage(StompFrame.UNSUBSCRIBE);
             unsubscribeMessage["id"] = "sub-" + sessionId;
             unsubscribeMessage["destination"] = "/state"+distination;

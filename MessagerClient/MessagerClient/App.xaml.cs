@@ -29,10 +29,14 @@ namespace MessagerClient
         private Dictionary<int, User> UserPool = new();
         private Dictionary<int, Channel> ChannelPool = new();
         private Dictionary<int, Message> MessagePool = new();
-        private Dictionary<int, ICollection<int>> ChannelMessagesDict = new();
+        private Dictionary<int, SortedSet<int>> ChannelMessagesDict = new();
         private Message LastAdded = null;
+        private Message LastRemoved = null;
 
-        public delegate void AppNotifyHandler(int id, bool message=false);
+        // 0 - add
+        // 1 - edit
+        // 2 - delete
+        public delegate void AppNotifyHandler(int id, bool message=false, int type = 0);
         public event AppNotifyHandler? UserChangeNotify = null;
         public event AppNotifyHandler? ChannelChangeNotify = null;
 
@@ -147,6 +151,44 @@ namespace MessagerClient
             });
         }
 
+        public void EditMessage(int messageId, string content, bool simulate = false)
+        {
+            if (ChannelPool.Count == 0)
+                return;
+            if (SelectedChannel is null)
+                return;
+            Channel c = ChannelPool[SelectedChannel.Value];
+            Message msgToEdit = MessagePool[messageId];
+            if (msgToEdit.Sender != AppUser)
+                throw new MessagerSoftClientException("you can't edit someone else's message");
+
+            if (simulate)
+                return;
+
+            msgToEdit.Content = content;
+            wsClient.Send<Message>("/channel/"+c.Id+"/change_message", msgToEdit);
+        }
+
+        public void DeleteMessage(Message msg)
+        {
+            if (msg.Id is null)
+                throw new MessagerModelException("Message id is null");
+            DeleteMessage(msg.Id.Value);
+        }
+
+        public void DeleteMessage(int messageId)
+        {
+            if (ChannelPool.Count == 0)
+                return;
+            if (SelectedChannel is null)
+                return;
+            Channel c = ChannelPool[SelectedChannel.Value];
+            Message msgToDelete = MessagePool[messageId];
+            if (msgToDelete.Sender != AppUser)
+                throw new MessagerSoftClientException("you can't delete someone else's message");
+            wsClient.Send<Message>("/channel/"+c.Id+ "/delete_message", msgToDelete);
+        }
+
         public void LoadCurrentChannelMessages(int start, int count)
         {
             if (SelectedChannel is null)
@@ -225,18 +267,18 @@ namespace MessagerClient
             if (message.Channel.Id is null)
                 throw new MessagerModelException("message channel entity does not have id");
             AppendToChannelMessagesDict(message.Channel);
-            ChannelMessagesDict[message.Channel.Id.Value].Add(message.Id.Value);
+            bool isAdded = ChannelMessagesDict[message.Channel.Id.Value].Add(message.Id.Value);
             LastAdded = message;
-            ChannelChangeNotify?.Invoke(message.Channel.Id.Value, true);
+            ChannelChangeNotify?.Invoke(message.Channel.Id.Value, true, isAdded ? 0 : 1);
         }
         private bool RemoveFromChannelMessageDict(int channelId, int messageId)
         {
-            ChannelChangeNotify?.Invoke(channelId, true);
+            ChannelChangeNotify?.Invoke(channelId, true, 2);
             return ChannelMessagesDict[channelId].Remove(messageId);
         }
         private bool RemoveFromChannelMessageDict(int channelId)
         {
-            ChannelChangeNotify?.Invoke(channelId);
+            ChannelChangeNotify?.Invoke(channelId, false, 2);
             return ChannelMessagesDict.Remove(channelId);
         }
         private bool RemoveFromChannelMessageDict(Message message)
@@ -247,6 +289,7 @@ namespace MessagerClient
                 throw new MessagerModelException("message entity does not have channel");
             if (message.Channel.Id is null)
                 throw new MessagerModelException("message channel entity does not have id");
+            LastRemoved = message;
             return RemoveFromChannelMessageDict(message.Channel.Id.Value, message.Id.Value);
         }
 
@@ -317,7 +360,7 @@ namespace MessagerClient
             else
                 MessagePool[message.Id.Value].Update(message, soft);
             AppendToChannelMessagesDict(message);
-            AppendToOrEditUserPool(message.Sender);
+            message.Sender = AppendToOrEditUserPool(message.Sender);
             return MessagePool[message.Id.Value];
         }
         private bool RemoveFromMessagePool(int id)
@@ -349,6 +392,11 @@ namespace MessagerClient
             return this.LastAdded;
         }
 
+        public Message GetLastRemoved()
+        {
+            return this.LastRemoved;
+        }
+
         // get current app
         public static App GetCurrent()
         {
@@ -371,8 +419,17 @@ namespace MessagerClient
         public void onMessageResive(StompMessage message)
         {
             string messageType = message.Command;
-            if (messageType != StompFrame.MESSAGE)
-                return;
+            switch (messageType)
+            {
+                case StompFrame.CONNECTED:
+                    wsClient.ConnectedToServer = true;
+                    MessageBox.Show("The connection to the server was successful");
+                    return;
+                case StompFrame.MESSAGE:
+                    break;
+                default:
+                    return;
+            }
 
             string destionation = message["destination"];
             if (destionation == null)
