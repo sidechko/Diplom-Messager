@@ -26,7 +26,9 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-    - name: Login to Docker Hub ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
+    - name: Test secret
+      run: echo ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
+    - name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
