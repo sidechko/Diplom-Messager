@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: build
+name: build_and_push
 
 on:
   push:
@@ -26,16 +26,23 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
-    - name: Test secret
-      run: echo ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
-    - name: Login to Docker Hub
+    - 
+      name: Test secret
+      env:
+        TEST_LOGIN: ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
+      run: echo "$TEST_LOGIN"
+    - 
+      name: Login to Docker Hub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_ACCOUNT_LOGIN }}
         password: ${{ secrets.DOCKER_ACCOUNT_TOKEN }}
-    - name: Grant execute permission for gradlew
+    - 
+      name: Grant execute permission for gradlew
       run: chmod +x CorpMessagerServer/gradlew
-    - name: Build a container image from our Spring Boot app using Paketo.io / Cloud Native Build Packs
+    - 
+      name: Build a container image from our Spring Boot app using Paketo.io / Cloud Native Build Packs
       run: ./CorpMessagerServer/gradlew bootBuildImage --imageName=s1pepega/my_messager:$MSGR_VERSION
-    - name: Tag & publish to GitHub Container Registry
+    - 
+      name: Tag & publish to GitHub Container Registry
       run: docker push s1pepega/my_messager:$MSGR_VERSION
