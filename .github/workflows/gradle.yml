@@ -34,9 +34,11 @@ jobs:
         password: ${{ secrets.DOCKER_ACCOUNT_TOKEN }}
     - 
       name: Grant execute permission for gradlew
-      run: chmod +x CorpMessagerServer/gradlew
+      working-directory: ./CorpMessagerServer
+      run: chmod +x gradlew
     - 
       name: Build a container image from our Spring Boot app using Paketo.io / Cloud Native Build Packs
+      working-directory: ./CorpMessagerServer
       run: ./CorpMessagerServer/gradlew bootBuildImage --imageName=s1pepega/my_messager:$MSGR_VERSION
     - 
       name: Tag & publish to GitHub Container Registry
