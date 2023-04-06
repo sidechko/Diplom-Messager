@@ -23,8 +23,10 @@ namespace MessagerClient
         public User GetAppUser() { return AppUser; }
         private int? SelectedChannel = null;
 
-        private RESTClient restClient = new RESTClient().SetURL("http://localhost:8080/api").Initilize();
-        private WSClient wsClient = new WSClient().SetURL("ws://localhost:8080/ws/websocket").Initilize();
+        private static string linkToServer = "localhost:8080";
+
+        private RESTClient restClient = new RESTClient().SetURL($"http://{linkToServer}/api").Initilize();
+        private WSClient wsClient = new WSClient().SetURL($"ws://{linkToServer}/ws/websocket").Initilize();
 
         private Dictionary<int, User> UserPool = new();
         private Dictionary<int, Channel> ChannelPool = new();

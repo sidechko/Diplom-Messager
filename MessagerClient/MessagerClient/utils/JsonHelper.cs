@@ -26,7 +26,7 @@ namespace MessagerClient.Utils
         public static ICollection<T> DeserializeList<T>(string json) where T : IModelBase<T>
         {
             ICollection <T> ? result = JsonSerializer.Deserialize<ICollection<T>>(json);
-            if (result is null || result.Count == 0)
+            if (result is null)
                 throw new MessagerDeserializeException("Unable to deserialize json: "+json);
             return result;
         }
