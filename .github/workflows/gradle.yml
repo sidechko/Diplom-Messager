@@ -9,7 +9,10 @@ name: build_and_push
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+    - "main"
+    paths:
+    - "CorpMessagerServer/**"
 
 env:
   MSGR_VERSION: 0.0.1-SNAPSHOT
