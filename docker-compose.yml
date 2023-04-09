@@ -8,6 +8,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password12345
+    command: --init-file /data/application/DBsqlScript.sql
+    volumes:
+        - ./DBsqlScript.sql:/data/application/DBsqlScript.sql
     ports:
       - 3306:3306
 
@@ -16,7 +19,7 @@ services:
     restart: always
     ports:
       - 8081:8080
-
+      
   messager_server:
     image: s1pepega/my_messager:0.0.1-SNAPSHOT
     restart: always
