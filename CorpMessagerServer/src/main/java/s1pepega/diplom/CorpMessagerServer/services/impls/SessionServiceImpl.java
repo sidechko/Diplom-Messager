@@ -1,6 +1,7 @@
 package s1pepega.diplom.CorpMessagerServer.services.impls;
 
 import org.springframework.stereotype.Service;
+import s1pepega.diplom.CorpMessagerServer.exceptions.IllegalSessionIdException;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.SessionService;
 
 import java.util.HashMap;
@@ -25,9 +26,9 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Boolean canSendRequest(Integer sessionId, Integer userId) {
         if(userId == null)
-            throw new RuntimeException("userId not present");
+            throw new IllegalSessionIdException("userId not present");
         if(!sessions.containsKey(sessionId))
-            throw new RuntimeException("unknown session, send request canceled");
+            throw new IllegalSessionIdException("unknown session, send request canceled");
         return sessions.get(sessionId).equals(userId);
     }
 

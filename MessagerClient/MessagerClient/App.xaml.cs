@@ -123,6 +123,7 @@ namespace MessagerClient
             {
                 throw new MessagerHardClientException(JsonHelper.Deserialize<ServerExceptionMessage>(response).Message, ex);
             }
+            wsClient.SubscribeTo("/user/" + AppUser.Id + "/exception");
             wsClient.SubscribeTo("/user/" + AppUser.Id + "/append_to_channel");
             wsClient.SubscribeTo("/user/" + AppUser.Id + "/remove_from_channel");
             channels.ForEach(c=> {
@@ -437,7 +438,12 @@ namespace MessagerClient
             if (destionation == null)
                 throw new MessagerConnectionException("Stomp message strange format: "+message.ToString());
             string[] splitedPath = destionation.Remove(0, 1).Split("/");
-            if(splitedPath[1].Equals("user"))
+
+            if (splitedPath[3].Equals("exception"))
+            {
+                MessageBox.Show(message.Body);
+            }
+            else if (splitedPath[1].Equals("user"))
             {
                 var body = JsonHelper.Deserialize<UserChannelLink>(message.Body);
 

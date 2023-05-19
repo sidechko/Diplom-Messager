@@ -96,6 +96,7 @@ namespace MessagerClient
             if (selectedChannel.Id is null)
                 return;
             App.GetCurrent().SetSelectedChannel(selectedChannel.Id.Value);
+            selectedChatDesc.Content = selectedChannel.Desc;
             CurrentChannelMessages = CurrentApp.GetChannelMessages();
             if (CurrentChannelMessages.Count == 0)
                 LoadMessagesForCurrentChannel();

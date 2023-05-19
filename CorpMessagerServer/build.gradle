@@ -34,10 +34,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named("bootBuildImage") {
-	imageName = "s1pepega.diplom.my_messager:${version}"
-}
-
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named("bootBuildImage") {
+	imageName = "s1pepega.diplom.my_messager:${version}"
 }

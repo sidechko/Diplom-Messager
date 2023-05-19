@@ -68,6 +68,11 @@ namespace MessagerClient.WS
             return this;
         }
 
+        public int GetSessionId()
+        {
+            return this.sessionId.HasValue ? this.sessionId.Value : -1;
+        }
+
         public WSClient SetMessageHandler(IWSMessageHandler handler)
         {
             this.messageHandler = handler;

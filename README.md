@@ -4,6 +4,7 @@
 
 ## Запуск сервера
 - Скачать [docker-compose.yml](./docker-compose.yml) и [DBsqlScript.sql](./DBsqlScript.sql) и поместить их в одну папку.
+
 - [Имея установленный докер](https://www.docker.com/ "Ссылка на скачивание"), исполнить, находясь в папке с файлом docker-compose.yml: ```docker-compose up```.
 
 ## Запуск клиента
