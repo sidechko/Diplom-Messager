@@ -14,7 +14,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public Integer getUserIdAsSession(Integer sessionId) {
         if(!sessions.containsKey(sessionId))
-            throw new RuntimeException("unknown session, user not found");
+            throw new IllegalSessionIdException("unknown session, user not found");
         return sessions.get(sessionId);
     }
 

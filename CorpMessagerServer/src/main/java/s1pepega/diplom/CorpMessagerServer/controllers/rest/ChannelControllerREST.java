@@ -2,10 +2,12 @@ package s1pepega.diplom.CorpMessagerServer.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.*;
 import s1pepega.diplom.CorpMessagerServer.entities.Channel;
 import s1pepega.diplom.CorpMessagerServer.entities.Message;
 import s1pepega.diplom.CorpMessagerServer.entities.User;
+import s1pepega.diplom.CorpMessagerServer.exceptions.WIPException;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.ChannelService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.MessageService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.UserChannelService;
@@ -22,7 +24,6 @@ public class ChannelControllerREST {
     private ChannelService channelService;
     @Autowired
     private UserChannelService ucService;
-
     @Autowired
     private MessageService messageService;
 
@@ -57,19 +58,20 @@ public class ChannelControllerREST {
     }
 
     @PostMapping(value = "/create", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public Channel create(@RequestBody Channel request) {
+    public Channel create(@RequestBody Channel request, @RequestHeader("sessionId") Integer sessionId) {
         return channelService.create(request);
     }
 
     @PatchMapping(value = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public Channel update(@RequestBody Channel request) {
+    public Channel update(@RequestBody Channel request, @RequestHeader("sessionId") Integer sessionId) {
         return channelService.update(request);
     }
 
     @DeleteMapping(value = "/delete/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public Channel delete(@PathVariable Integer id) {
-        Channel channel = channelService.findById(id);
-        channelService.delete(id);
-        return channel;
+        throw new WIPException();
+//        Channel channel = channelService.findById(id);
+//        channelService.delete(id);
+//        return channel;
     }
 }

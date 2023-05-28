@@ -2,9 +2,11 @@ package s1pepega.diplom.CorpMessagerServer.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import s1pepega.diplom.CorpMessagerServer.entities.Channel;
 import s1pepega.diplom.CorpMessagerServer.entities.User;
+import s1pepega.diplom.CorpMessagerServer.exceptions.IllegalSessionIdException;
 import s1pepega.diplom.CorpMessagerServer.models.LoginResponse;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.SessionService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.UserChannelService;
@@ -19,6 +21,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserControllerREST {
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -79,6 +82,6 @@ public class UserControllerREST {
 
     private void checkSession(Integer userId, Integer sessionId){
         if(!sessionService.canSendRequest(sessionId, userId))
-            throw new RuntimeException("access denied");
+            throw new IllegalSessionIdException("access denied");
     }
 }

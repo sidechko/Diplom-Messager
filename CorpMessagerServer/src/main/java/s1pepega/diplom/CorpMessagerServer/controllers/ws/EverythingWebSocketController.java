@@ -14,6 +14,8 @@ import s1pepega.diplom.CorpMessagerServer.services.interfaces.MessageService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.SessionService;
 import s1pepega.diplom.CorpMessagerServer.services.interfaces.UserChannelService;
 
+import java.util.Objects;
+
 @Controller
 public class EverythingWebSocketController {
     @Autowired
@@ -24,8 +26,6 @@ public class EverythingWebSocketController {
     private MessageService messageService;
     @Autowired
     private SessionService sessionService;
-
-
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -71,6 +71,7 @@ public class EverythingWebSocketController {
             @Payload Message message,
             @Header("sessionId") Integer sessionId
     ) throws Exception {
+        checkMsgPermission(message,sessionId);
         return messageService.sendMessage(message);
     }
 
@@ -81,6 +82,7 @@ public class EverythingWebSocketController {
             @Payload Message message,
             @Header("sessionId") Integer sessionId
     ) throws Exception {
+        checkMsgPermission(message,sessionId);
         return messageService.editMessage(message);
     }
 
@@ -91,10 +93,17 @@ public class EverythingWebSocketController {
             @Payload Message message,
             @Header("sessionId") Integer sessionId
     ) throws Exception {
+        checkMsgPermission(message,sessionId);
         messageService.delete(message.getId());
         return message;
     }
 
+    private void checkMsgPermission(Message message, Integer sessionId){
+        if(!Objects.equals(sessionService.getUserIdAsSession(sessionId), message.getSender().getId()))
+            throw new IllegalSessionIdException("this session cannot manage this user's messages");
+    }
+
+    //Exception handler
     @MessageMapping("/debug/excTest")
     public Integer testMessage(@Payload Integer sessionId){
         throw new IllegalSessionIdException("TEST MESSAGE EXCEPTION HANDLER",sessionId);

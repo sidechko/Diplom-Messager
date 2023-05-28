@@ -67,7 +67,7 @@ namespace MessagerClient.REST
             var responce = Client.SendAsync(buildMessage(method, subUrl, content)).ContinueWith((responseTask) =>
             {
                 string result = "";
-                try { 
+                try {
                     result = responseTask.Result.Content.ReadAsStringAsync().Result;
                 }
                 catch(Exception _ex) { ex = _ex; }
