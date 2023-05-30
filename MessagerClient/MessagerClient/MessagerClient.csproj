@@ -5,11 +5,24 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>message-svgrepo-com.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="message-svgrepo-com.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="message-svgrepo-com.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="message-svgrepo-com.png" />
   </ItemGroup>
 
 </Project>

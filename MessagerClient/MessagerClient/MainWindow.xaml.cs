@@ -55,7 +55,9 @@ namespace MessagerClient
             {
                 if (isMessage && CurrentApp.IsSelectedChannel(channelId))
                 {
-                    switch (type)
+                    CurrentChannelMessages = CurrentApp.GetChannelMessages();
+                    ChannelMessages.Items.Refresh();
+                    /*switch (type)
                     {
                         //ADD
                         case 0:
@@ -63,19 +65,22 @@ namespace MessagerClient
                             break;
                         //EDIT
                         case 1:
-                            int index = CurrentChannelMessages.IndexOf(CurrentChannelMessages.Single(msg => msg.Id.Value == CurrentApp.GetLastAdded().Id.Value));
+                            var idToCh = CurrentApp.GetLastAdded().Id.Value;
+                            int index = CurrentChannelMessages.IndexOf(CurrentChannelMessages.Single(msg => msg.Id.Value == idToCh));
                             CurrentChannelMessages.RemoveAt(index);
                             CurrentChannelMessages.Insert(index, CurrentApp.GetLastAdded());
                             break;
                         //DELETE
                         case 2:
-                            CurrentChannelMessages.Remove(CurrentChannelMessages.Single(msg => msg.Id.Value == CurrentApp.GetLastRemoved().Id.Value));
+                            var idToRm = CurrentApp.GetLastRemoved().Id.Value;
+                            CurrentChannelMessages.Remove(CurrentChannelMessages.Single(msg => msg.Id.Value == idToRm));
                             break;
-                    }
+                    }*/
                 }
                 else
                     Channels.ItemsSource = CurrentApp.GetChannels();
             });
+            
             UpdateMessageSource();
         }
 
@@ -172,7 +177,13 @@ namespace MessagerClient
 
         private void AppendUserButton_Click(object sender, RoutedEventArgs e)
         {
-            (new CreateNewChannelDialog()).Show();
+            (new AppendUserToChannel()).Show();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+            CurrentApp.Reload();
         }
     }
 }

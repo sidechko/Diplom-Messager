@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessagerClient"
         mc:Ignorable="d"
-        Title="AppendUserToChannel" Height="110" Width="300">
-    <StackPanel>
+        Title="AppendUserToChannel" Height="180" Width="300" Icon="/message-svgrepo-com.png">
+    <StackPanel Margin="20">
         <Label>User login</Label>
         <TextBox Name="UserNameTB"></TextBox>
         <Button Margin="0 10 0 0" Click="Button_Click">Append</Button>

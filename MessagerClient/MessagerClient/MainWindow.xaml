@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MessagerClient"
         xmlns:models="clr-namespace:MessagerClient.models"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800" Closing="Window_Closing">
+        Title="MainWindow" Height="450" Width="800" MinHeight="450" MinWidth="800" Closing="Window_Closing" Icon="/message-svgrepo-com.png">
     <Window.Resources>
         <local:MessagerCheckIsCurrentUser x:Key="CheckIsUser"/>
     </Window.Resources>
@@ -89,6 +89,10 @@
                 </Grid>
             </Grid>
         </Border>
-        
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Reload" Click="MenuItem_Click"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
     </Grid>
 </Window>

@@ -50,6 +50,22 @@ namespace MessagerClient
             base.OnExit(e);
         }
 
+        public void Reload()
+        {
+            restClient = restClient.Initilize();
+            wsClient = wsClient.Initilize();
+            User usr = AppUser;
+
+            AppUser = null;
+            UserPool.Clear();
+            ChannelPool.Clear();
+            MessagePool.Clear();
+            ChannelMessagesDict.Clear();
+
+            Login(usr);
+            PrepareWS();
+        }
+
         public void Login(User user)
         {
             if (AppUser is not null)
@@ -278,13 +294,15 @@ namespace MessagerClient
         }
         private bool RemoveFromChannelMessageDict(int channelId, int messageId)
         {
+            bool tR = ChannelMessagesDict[channelId].Remove(messageId);
             ChannelChangeNotify?.Invoke(channelId, true, 2);
-            return ChannelMessagesDict[channelId].Remove(messageId);
+            return tR;
         }
         private bool RemoveFromChannelMessageDict(int channelId)
         {
+            bool tR = ChannelMessagesDict.Remove(channelId);
             ChannelChangeNotify?.Invoke(channelId, false, 2);
-            return ChannelMessagesDict.Remove(channelId);
+            return tR;
         }
         private bool RemoveFromChannelMessageDict(Message message)
         {
@@ -545,7 +563,7 @@ namespace MessagerClient
             }
         }
 
-        //wORK with env
+        //get url from file
 
         private static string GetServerURL()
         {

@@ -54,3 +54,4 @@ C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Debug\net6.0-wind
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Debug\net6.0-windows\CreateNewChannelDialog.baml
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Debug\net6.0-windows\AppendUserToChannel.g.cs
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Debug\net6.0-windows\AppendUserToChannel.baml
+C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Debug\net6.0-windows\MessagerClient_Content.g.cs

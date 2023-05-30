@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessagerClient"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="230" Width="400" MinHeight="230" MinWidth="400" MaxHeight="230" MaxWidth="400">
+        Title="LoginWindow" Height="230" Width="400" MinHeight="230" MinWidth="400" MaxHeight="230" MaxWidth="400" Icon="/message-svgrepo-com.png">
     <StackPanel Margin="20">
         <Label>Login</Label>
         <TextBox Name="LoginTB"/>
