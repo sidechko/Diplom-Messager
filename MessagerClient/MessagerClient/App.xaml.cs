@@ -6,8 +6,10 @@ using MessagerClient.WS;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Windows;
 
 namespace MessagerClient
@@ -23,7 +25,7 @@ namespace MessagerClient
         public User GetAppUser() { return AppUser; }
         private int? SelectedChannel = null;
 
-        private static string linkToServer = "localhost:8080";
+        private static string linkToServer = GetServerURL();
 
         private RESTClient restClient = new RESTClient().SetURL($"http://{linkToServer}/api").Initilize();
         private WSClient wsClient = new WSClient().SetURL($"ws://{linkToServer}/ws/websocket").Initilize();
@@ -38,7 +40,7 @@ namespace MessagerClient
         // 0 - add
         // 1 - edit
         // 2 - delete
-        public delegate void AppNotifyHandler(int id, bool message=false, int type = 0);
+        public delegate void AppNotifyHandler(int id, bool message = false, int type = 0);
         public event AppNotifyHandler? UserChangeNotify = null;
         public event AppNotifyHandler? ChannelChangeNotify = null;
 
@@ -113,7 +115,7 @@ namespace MessagerClient
 
             wsClient.Connect();
 
-            string response = restClient.SendAndResiveRequest(HttpMethod.Get, "/users/"+AppUser.Id+ "/getChannels");
+            string response = restClient.SendAndResiveRequest(HttpMethod.Get, "/users/" + AppUser.Id + "/getChannels");
             List<Channel> channels;
             try
             {
@@ -126,7 +128,7 @@ namespace MessagerClient
             wsClient.SubscribeTo("/user/" + AppUser.Id + "/exception");
             wsClient.SubscribeTo("/user/" + AppUser.Id + "/append_to_channel");
             wsClient.SubscribeTo("/user/" + AppUser.Id + "/remove_from_channel");
-            channels.ForEach(c=> {
+            channels.ForEach(c => {
                 try
                 {
                     Channel channel = AppendToOrEditChannelPool(c);
@@ -146,7 +148,7 @@ namespace MessagerClient
             if (SelectedChannel is null)
                 return;
             Channel c = ChannelPool[SelectedChannel.Value];
-            wsClient.Send<Message>("/channel/"+c.Id+"/send_message", new Message()
+            wsClient.Send<Message>("/channel/" + c.Id + "/send_message", new Message()
             {
                 Sender = AppUser,
                 Channel = ChannelPool[SelectedChannel.Value],
@@ -169,7 +171,7 @@ namespace MessagerClient
                 return;
 
             msgToEdit.Content = content;
-            wsClient.Send<Message>("/channel/"+c.Id+"/change_message", msgToEdit);
+            wsClient.Send<Message>("/channel/" + c.Id + "/change_message", msgToEdit);
         }
 
         public void DeleteMessage(Message msg)
@@ -189,7 +191,7 @@ namespace MessagerClient
             Message msgToDelete = MessagePool[messageId];
             if (msgToDelete.Sender != AppUser)
                 throw new MessagerSoftClientException("you can't delete someone else's message");
-            wsClient.Send<Message>("/channel/"+c.Id+ "/delete_message", msgToDelete);
+            wsClient.Send<Message>("/channel/" + c.Id + "/delete_message", msgToDelete);
         }
 
         public void LoadCurrentChannelMessages(int start, int count)
@@ -199,7 +201,7 @@ namespace MessagerClient
             LoadChannelMessages(SelectedChannel.Value, start, count);
         }
 
-        public void LoadChannelMessages(int channel, int start=0, int count=0)
+        public void LoadChannelMessages(int channel, int start = 0, int count = 0)
         {
             string response;
             if (start < 0)
@@ -208,7 +210,7 @@ namespace MessagerClient
                 response = restClient.SendAndResiveRequest(HttpMethod.Get, "/channels/" + channel + "/getMessages/from" + start + "/to" + count);
             else
                 response = restClient.SendAndResiveRequest(HttpMethod.Get, "/channels/" + channel + "/getMessagesAll");
-            List <Message> messages;
+            List<Message> messages;
             try
             {
                 messages = JsonHelper.DeserializeList<Message>(response).ToList();
@@ -256,7 +258,7 @@ namespace MessagerClient
         {
             if (channel.Id is null)
                 throw new MessagerModelException("channel entity does not have id");
-            if(needNotify)
+            if (needNotify)
                 ChannelChangeNotify?.Invoke(channel.Id.Value, false);
             if (!ChannelMessagesDict.ContainsKey(channel.Id.Value))
                 ChannelMessagesDict[channel.Id.Value] = new SortedSet<int>();
@@ -418,6 +420,47 @@ namespace MessagerClient
             return SelectedChannel.Value == id;
         }
 
+        //Create channel and subsribe
+        public void CreateChannelAndSubcribeTo(string name, string desc)
+        {
+            Channel newChannel = new Channel() { Name = name, Desc = desc };
+            string response = restClient.SendAndResiveRequest(HttpMethod.Post, "/channels/create", JsonHelper.Serialize(newChannel));
+            try
+            {
+                newChannel = JsonHelper.Deserialize<Channel>(response);
+            }
+            catch (MessagerDeserializeException ex) {
+                throw new MessagerHardClientException(JsonHelper.Deserialize<ServerExceptionMessage>(response).Message, ex);
+            }
+            AddUserToChannel(AppUser, newChannel);
+        }
+
+        public void AddUserToCurrentChannelAsName(string name)
+        {
+            User userToAdd;
+            var founded = UserPool.Values.Where(u => u.Login == name);
+            if (founded == null)
+            {
+                var response = restClient.SendAndResiveRequest(HttpMethod.Get, "/users/@" + name);
+                try
+                {
+                    userToAdd = JsonHelper.Deserialize<User>(response);
+                    AppendToOrEditUserPool(userToAdd);
+                }
+                catch (MessagerDeserializeException ex)
+                {
+                    throw new MessagerHardClientException(JsonHelper.Deserialize<ServerExceptionMessage>(response).Message, ex);
+                }
+            }
+            else { userToAdd = founded.First(); }
+            AddUserToChannel(userToAdd, ChannelPool[SelectedChannel.Value]);
+        }
+
+        public void AddUserToChannel(User user, Channel channel)
+        {
+            wsClient.Send<UserChannelLink>("/add_user_to_channel/" + user.Id, new UserChannelLink { User = user, Channel = channel });
+        }
+
         //MESSAGE HANDLER!!!
         public void onMessageResive(StompMessage message)
         {
@@ -436,7 +479,7 @@ namespace MessagerClient
 
             string destionation = message["destination"];
             if (destionation == null)
-                throw new MessagerConnectionException("Stomp message strange format: "+message.ToString());
+                throw new MessagerConnectionException("Stomp message strange format: " + message.ToString());
             string[] splitedPath = destionation.Remove(0, 1).Split("/");
 
             if (splitedPath[3].Equals("exception"))
@@ -478,15 +521,15 @@ namespace MessagerClient
                 {
                     var body = JsonHelper.Deserialize<Message>(message.Body);
 
-                    if (splitedPath[4].Equals("send")) 
+                    if (splitedPath[4].Equals("send"))
                     {
                         AppendToOrEditMessagePool(body);
                     }
-                    else if (splitedPath[4].Equals("change")) 
+                    else if (splitedPath[4].Equals("change"))
                     {
                         AppendToOrEditMessagePool(body, true);
                     }
-                    else if (splitedPath[4].Equals("delete")) 
+                    else if (splitedPath[4].Equals("delete"))
                     {
                         RemoveFromMessagePool(body);
                     }
@@ -498,8 +541,35 @@ namespace MessagerClient
             }
             else
             {
-                throw new MessagerConnectionException("strange stomp message destination: "+destionation);
+                throw new MessagerConnectionException("strange stomp message destination: " + destionation);
             }
+        }
+
+        //wORK with env
+
+        private static string GetServerURL()
+        {
+            string url  = "localhost:8080";
+            string filePath = "serverURL.cmcfg";
+
+            if (!File.Exists(filePath))
+            {
+                using (FileStream fs = File.Create(filePath))
+                {
+                    Byte[] buffer = new UTF8Encoding(true).GetBytes(url);
+                    fs.Write(buffer, 0, buffer.Length);
+                }
+            }
+            else
+            {
+                using(StreamReader sr = File.OpenText(filePath))
+                {
+                    url = sr.ReadLine();
+                }
+            }
+
+            return url;
+
         }
     }
 }

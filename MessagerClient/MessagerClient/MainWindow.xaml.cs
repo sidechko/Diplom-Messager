@@ -164,5 +164,15 @@ namespace MessagerClient
                 MessageBox.Show("ERROR: "+ex.Message, ex.GetType().Name);
             }
         }
+
+        private void CreateNewChannelButton_Click(object sender, RoutedEventArgs e)
+        {
+            (new CreateNewChannelDialog()).Show();
+        }
+
+        private void AppendUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            (new CreateNewChannelDialog()).Show();
+        }
     }
 }

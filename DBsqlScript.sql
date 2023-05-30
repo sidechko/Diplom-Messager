@@ -78,7 +78,7 @@ ENGINE = InnoDB;
 -- Table `mymessager`.`userchannels`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mymessager`.`userchannels` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `userid` INT NOT NULL,
   `availablechannel` INT NOT NULL,
   PRIMARY KEY (`id`),

@@ -33,17 +33,23 @@
                 <RowDefinition/>
                 <RowDefinition Height="15*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="CreateNewChannelButton" Margin="0 0 0 5">Create new channel</Button>
+            <Button x:Name="CreateNewChannelButton" Margin="0 0 0 5" Click="CreateNewChannelButton_Click">Create new channel</Button>
             <ListBox Grid.Row="1" Background="{x:Null}" x:Name="Channels" HorizontalAlignment="Center" VerticalAlignment="Top" 
                      Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Grid},AncestorLevel=1}}"
                      Padding="5" BorderBrush="{x:Null}" SelectionChanged="Channels_SelectionChanged"/>
         </Grid>
         <!--CHANNEL INFO-->
         <Grid Grid.Column="1" Background="#99D8D7D7">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
                 <Label>Chat description:</Label>
-                <Label Name="selectedChatDesc"></Label>
-            </StackPanel>
+                <Label Name="selectedChatDesc" Grid.Column="1"></Label>
+                <Button Name="AppendUserToChannelButton" Grid.Column="2" Click="AppendUserButton_Click">Append User</Button>
+            </Grid>
         </Grid>
         <!--CHANNEL MESSAGES BOARD-->
         <Border Grid.Column="1" Grid.Row="1" BorderBrush="#FFD8D7D7" BorderThickness="3,3,0,0">

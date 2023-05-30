@@ -10,11 +10,11 @@ none
 false
 TRACE;RELEASE;NET;NET6_0;NETCOREAPP
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\App.xaml
-2-216653475
+4696962140
 
-231352169053
-195-1663153166
-LoginWindow.xaml;MainWindow.xaml;
+241453373354
+195-190811507
+AppendUserToChannel.xaml;CreateNewChannelDialog.xaml;LoginWindow.xaml;MainWindow.xaml;
 
-False
+True
 

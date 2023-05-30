@@ -7,11 +7,23 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AppendUserToChannel.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="CreateNewChannelDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="LoginWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="AppendUserToChannel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="CreateNewChannelDialog.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="LoginWindow.xaml">
       <SubType>Designer</SubType>
     </Page>

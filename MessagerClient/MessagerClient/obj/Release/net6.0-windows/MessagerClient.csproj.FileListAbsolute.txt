@@ -49,3 +49,7 @@ C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-wi
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\MessagerClient.pdb
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\MessagerClient.genruntimeconfig.cache
 C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\ref\MessagerClient.dll
+C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\AppendUserToChannel.g.cs
+C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\CreateNewChannelDialog.g.cs
+C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\AppendUserToChannel.baml
+C:\Users\User\Desktop\Diplom\MessagerClient\MessagerClient\obj\Release\net6.0-windows\CreateNewChannelDialog.baml

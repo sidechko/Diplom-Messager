@@ -38,3 +38,7 @@ out/
 
 ### Visual Studio ###
 .vs
+
+
+/imgRs
+**/MessagerClient/obj
