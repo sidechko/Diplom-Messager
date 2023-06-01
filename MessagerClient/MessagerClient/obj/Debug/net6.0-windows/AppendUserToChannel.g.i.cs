@@ -61,7 +61,7 @@ namespace MessagerClient {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/MessagerClient;component/appendusertochannel.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/MessagerClient;V1.0.0.0;component/appendusertochannel.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\AppendUserToChannel.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
