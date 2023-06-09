@@ -57,25 +57,6 @@ namespace MessagerClient
                 {
                     CurrentChannelMessages = CurrentApp.GetChannelMessages();
                     ChannelMessages.Items.Refresh();
-                    /*switch (type)
-                    {
-                        //ADD
-                        case 0:
-                            CurrentChannelMessages.Add(CurrentApp.GetLastAdded());
-                            break;
-                        //EDIT
-                        case 1:
-                            var idToCh = CurrentApp.GetLastAdded().Id.Value;
-                            int index = CurrentChannelMessages.IndexOf(CurrentChannelMessages.Single(msg => msg.Id.Value == idToCh));
-                            CurrentChannelMessages.RemoveAt(index);
-                            CurrentChannelMessages.Insert(index, CurrentApp.GetLastAdded());
-                            break;
-                        //DELETE
-                        case 2:
-                            var idToRm = CurrentApp.GetLastRemoved().Id.Value;
-                            CurrentChannelMessages.Remove(CurrentChannelMessages.Single(msg => msg.Id.Value == idToRm));
-                            break;
-                    }*/
                 }
                 else
                     Channels.ItemsSource = CurrentApp.GetChannels();

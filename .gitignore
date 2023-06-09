@@ -17,7 +17,7 @@ out/
 ### Visual Studio ###
 .vs
 
-
+!/imgRs/eerDB.png
 /imgRs/
 /MessagerClient/MessagerClient/obj/
 /MessagerClient/MessagerClient/bin/
