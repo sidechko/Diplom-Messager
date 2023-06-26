@@ -457,7 +457,7 @@ namespace MessagerClient
         {
             User userToAdd;
             var founded = UserPool.Values.Where(u => u.Login == name);
-            if (founded == null)
+            if (founded == null || founded.Count() == 0)
             {
                 var response = restClient.SendAndResiveRequest(HttpMethod.Get, "/users/@" + name);
                 try
